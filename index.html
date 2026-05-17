@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>水果商城</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- 引入Vue3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- 导航栏 -->
+    <nav>
+      <h1>🍎 水果商城</h1>
+      <button @click="viewCart">购物车({{ cartCount }})</button>
+    </nav>
+
+    <!-- 商品列表页 -->
+    <div v-if="page === 'list'" class="product-list">
+      <div class="product-card" v-for="item in productList" :key="item.id">
+        <img :src="item.img" :alt="item.name">
+        <h3>{{ item.name }}</h3>
+        <p class="price">¥{{ item.price }}/斤</p>
+        <button @click="goDetail(item.id)">查看详情</button>
+        <button @click="addToCart(item)">加入购物车</button>
+      </div>
+    </div>
+
+    <!-- 商品详情页 -->
+    <div v-if="page === 'detail' && currentProduct" class="detail-page">
+      <img :src="currentProduct.img">
+      <h2>{{ currentProduct.name }}</h2>
+      <p>{{ currentProduct.desc }}</p>
+      <p class="price">¥{{ currentProduct.price }}/斤</p>
+      <p>库存：{{ currentProduct.stock }}斤</p>
+      <button @click="addToCart(currentProduct)">加入购物车</button>
+      <button @click="goBack">返回列表</button>
+    </div>
+
+    <!-- 购物车页面 -->
+    <div v-if="page === 'cart'" class="cart-page">
+      <h2>我的购物车</h2>
+      <div class="cart-item" v-for="(item, index) in cartList" :key="index">
+        <p>{{ item.name }} × {{ item.quantity }}</p>
+        <p>单价：¥{{ item.price }} 小计：¥{{ (item.price * item.quantity).toFixed(2) }}</p>
+        <button @click="removeFromCart(index)">删除</button>
+      </div>
+      <p class="total">总计：¥{{ totalPrice }}</p>
+      <button @click="checkout">提交订单</button>
+      <button @click="goBack">返回列表</button>
+    </div>
+  </div>
+
+  <script src="product.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
